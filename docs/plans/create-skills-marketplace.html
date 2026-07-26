@@ -1460,12 +1460,12 @@ img, video { max-width: 100%; height: auto; }
       <p class="section-intro">The step-by-step work, in order — each step says what to do, why it matters, and how to check it worked.</p>
       <div class="steps-list">
 
-        <div class="step-card">
+        <div class="step-card completed">
           <div class="step-card-header">
             <div class="step-number">1</div>
             <div class="step-body">
               <div class="step-action">
-                <span class="step-chip">todo</span>
+                <span class="step-chip">done</span>
                 <span class="step-chip-text">Initialize ~/devbox/skills as a git repository with the ecosystem layout: git init, a root README.md with per-agent install commands, a skill index, and the demotion policy (a skill that grows Claude-only dependencies moves back to its agentics plugin and is removed here in the same release), an MIT LICENSE, a .gitignore, and the skills/ directory, committed together with the existing docs/ content</span>
               </div>
               <div class="step-why">the npx skills CLI only discovers skills in a repo shaped skills/name/SKILL.md, and the proposal and this plan should travel in the repo&#39;s history from the first commit</div>
@@ -1477,12 +1477,12 @@ img, video { max-width: 100%; height: auto; }
           </div>
         </div>
 
-        <div class="step-card">
+        <div class="step-card completed">
           <div class="step-card-header">
             <div class="step-number">2</div>
             <div class="step-body">
               <div class="step-action">
-                <span class="step-chip">todo</span>
+                <span class="step-chip">done</span>
                 <span class="step-chip-text">Triage all 60 monorepo skills (find ~/devbox/agentics/kit/plugins -maxdepth 4 -name SKILL.md) against the portability checklist in the proposal&#39;s Appendix A and record every verdict in docs/triage.md, marking 10–15 as the flagship set</span>
               </div>
               <div class="step-why">curation is the locked strategy — an auditable include/exclude record keeps the launch set defensible and makes later expansion mechanical instead of a judgment call each time</div>
@@ -1494,12 +1494,12 @@ img, video { max-width: 100%; height: auto; }
           </div>
         </div>
 
-        <div class="step-card">
+        <div class="step-card completed">
           <div class="step-card-header">
             <div class="step-number">3</div>
             <div class="step-body">
               <div class="step-action">
-                <span class="step-chip">todo</span>
+                <span class="step-chip">done</span>
                 <span class="step-chip-text">Extract each flagship skill into skills/name/SKILL.md (copying its references/ directory when present), keeping original skill names — identity on skills.sh is owner/repo/skill-name, so the shawn-sandy/skills namespace disambiguates, and a rename happens only if triage finds an exact-name clash with a widely installed skill — and adapting frontmatter per the proposal&#39;s Appendix B: keep name, description, and allowed-tools; drop disable-model-invocation; add license MIT plus metadata author shawn-sandy and version 1.0; rewrite each description to state what the skill does and when to use it with keywords that trigger across agents</span>
               </div>
               <div class="step-why">spec-compliant frontmatter and keyword-rich descriptions are what make the same file activate correctly on Claude Code, Codex, Cursor, and Gemini rather than only on Claude Code&#39;s skill picker</div>
@@ -1511,12 +1511,12 @@ img, video { max-width: 100%; height: auto; }
           </div>
         </div>
 
-        <div class="step-card">
+        <div class="step-card completed">
           <div class="step-card-header">
             <div class="step-number">4</div>
             <div class="step-body">
               <div class="step-action">
-                <span class="step-chip">todo</span>
+                <span class="step-chip">done</span>
                 <span class="step-chip-text">Add the runnable checks: tests/validate-all.sh runs the official skills-ref validator across every skills directory and falls back to a bundled frontmatter checker implementing the same rules when skills-ref is unavailable, tests/verify-install.sh installs the repo into a temporary project via npx skills add, asserts every flagship skill lands, and removes the temporary directory afterward, and .github/workflows/validate.yml runs both scripts on push and pull request</span>
               </div>
               <div class="step-why">a marketplace repo is only trustworthy if every future commit is machine-checked against the spec — manual review does not scale past the launch set</div>
