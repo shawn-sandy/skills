@@ -50,7 +50,7 @@ When authoring or reviewing a skill, read `skills/reviewing-skills/references/be
 
 ## Generated files
 
-The README skill table between `<!-- INDEX:START -->` and `<!-- INDEX:END -->` is generated. Run `python3 scripts/update-index.py` after changing any skill's `name` or `description`, and never hand-edit the table. The generator matches frontmatter with a line-anchored regex over the whole file, so a body line beginning with `description:` will corrupt the index.
+The README skill table between `<!-- INDEX:START -->` and `<!-- INDEX:END -->` is generated. Run `python3 scripts/update-index.py` after changing any skill's `name` or `description`, and never hand-edit the table. The generator writes each description straight into a Markdown table cell, so a `|` anywhere in a `description` adds a column and corrupts that row — keep pipe characters out of descriptions.
 
 ## Releases
 

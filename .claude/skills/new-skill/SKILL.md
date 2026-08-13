@@ -8,6 +8,10 @@ Scaffold a new marketplace skill named `$ARGUMENTS`.
 
 This skill lives in `.claude/skills/` and is Claude Code tooling for this repo. The `disable-model-invocation` key is correct here and must never be copied into a published skill under `skills/` — the validator rejects it there.
 
+## 0. Load the authoring rules
+
+Read `skills/reviewing-skills/references/best-practices.md` before writing anything. It holds the full spec rules and is not loaded automatically, so a skill written without it can pass the bundled checker and still violate the spec.
+
 ## 1. Check the name
 
 Reject and ask for a different name if any of these fail:
@@ -26,7 +30,7 @@ Get from the user, in one batched question if possible:
 - When an agent should reach for it — the "Use when …" trigger.
 - Which tools it needs, for `allowed-tools`.
 
-Write the `description` as a single third-person paragraph, no newlines, 1024 chars max: capability sentence first, then a `Use when …` clause. Add a scope-exclusion clause when the trigger could collide with an existing skill — check `skills/*/SKILL.md` descriptions for overlap before settling on wording.
+Write the `description` as a single third-person paragraph, no newlines, 1024 chars max: capability sentence first, then a `Use when …` clause. No `|` characters — `scripts/update-index.py` writes the description straight into a Markdown table cell, and a pipe silently adds a column. Add a scope-exclusion clause when the trigger could collide with an existing skill — check `skills/*/SKILL.md` descriptions for overlap before settling on wording.
 
 ## 3. Write skills/<name>/SKILL.md
 
