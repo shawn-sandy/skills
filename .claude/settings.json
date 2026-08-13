@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c 'import json,os,subprocess,sys\nd=os.environ.get(\"CLAUDE_PROJECT_DIR\") or os.getcwd()\np=(json.load(sys.stdin).get(\"tool_input\") or {}).get(\"file_path\") or \"\"\nif not p.startswith(os.path.join(d,\"skills\")+os.sep): sys.exit(0)\nr=subprocess.run([sys.executable,\"tests/validate_frontmatter.py\",\"skills\"],cwd=d,capture_output=True,text=True)\nif r.returncode: sys.stderr.write(r.stdout+r.stderr); sys.exit(2)'",
+            "timeout": 30,
+            "statusMessage": "Validating skill frontmatter..."
+          }
+        ]
+      }
+    ]
+  }
+}
