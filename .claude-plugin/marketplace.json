@@ -1,0 +1,25 @@
+{
+  "name": "shawn-sandy",
+  "description": "Curated, platform-agnostic agent skills by Shawn Sandy",
+  "owner": {
+    "name": "Shawn Sandy",
+    "url": "https://github.com/shawn-sandy"
+  },
+  "plugins": [
+    {
+      "name": "skills",
+      "source": "./",
+      "description": "Twelve portable agent skills for planning, code review, testing, memory, accessibility, and security. Skills are auto-discovered from skills/.",
+      "version": "0.1.0",
+      "license": "MIT",
+      "homepage": "https://github.com/shawn-sandy/skills",
+      "repository": "https://github.com/shawn-sandy/skills",
+      "author": {
+        "name": "Shawn Sandy",
+        "url": "https://github.com/shawn-sandy"
+      },
+      "category": "development",
+      "keywords": ["skills", "code-review", "testing", "planning", "accessibility", "security"]
+    }
+  ]
+}

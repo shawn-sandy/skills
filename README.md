@@ -23,6 +23,24 @@ npx skills add shawn-sandy/skills -g
 The CLI detects your installed agents and copies each skill into the right
 location (`.claude/skills/`, `.agents/skills/`, `~/.cursor/skills/`, ...).
 
+### Claude Code plugin marketplace
+
+This repo also doubles as a [Claude Code plugin
+marketplace](https://code.claude.com/docs/en/plugin-marketplaces). Inside Claude
+Code:
+
+```bash
+/plugin marketplace add shawn-sandy/skills
+```
+
+```bash
+/plugin install skills@shawn-sandy
+```
+
+That installs all twelve skills as one plugin, namespaced under `skills:` (for
+example `/skills:tdd-fix`). Both paths serve the same `skills/<name>/SKILL.md`
+files — pick whichever fits your agent.
+
 ## Skills
 
 <!-- INDEX:START — updated as skills are added -->
@@ -46,6 +64,7 @@ location (`.claude/skills/`, `.agents/skills/`, `~/.cursor/skills/`, ...).
 
 ```
 skills/<name>/SKILL.md    # one directory per skill, per the Agent Skills spec
+.claude-plugin/           # Claude Code marketplace catalog + plugin manifest
 tests/validate-all.sh     # spec-compliance sweep (CI)
 tests/verify-install.sh   # end-to-end install smoke test
 docs/                     # proposal, plan, and triage records behind this repo
