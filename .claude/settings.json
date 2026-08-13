@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; d=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; case \"$f\" in \"$d\"/skills/*) o=$(cd \"$d\" && python3 tests/validate_frontmatter.py skills) || { printf '%s\\n' \"$o\" >&2; exit 2; };; esac; }",
+            "command": "python3 -c 'import json,os,subprocess,sys\nd=os.environ.get(\"CLAUDE_PROJECT_DIR\") or os.getcwd()\np=(json.load(sys.stdin).get(\"tool_input\") or {}).get(\"file_path\") or \"\"\nif not p.startswith(os.path.join(d,\"skills\")+os.sep): sys.exit(0)\nr=subprocess.run([sys.executable,\"tests/validate_frontmatter.py\",\"skills\"],cwd=d,capture_output=True,text=True)\nif r.returncode: sys.stderr.write(r.stdout+r.stderr); sys.exit(2)'",
             "timeout": 30,
             "statusMessage": "Validating skill frontmatter..."
           }

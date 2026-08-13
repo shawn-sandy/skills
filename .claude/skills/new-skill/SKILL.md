@@ -42,7 +42,9 @@ metadata:
 ---
 ```
 
-Body rules: no H1, imperative voice, under 500 lines. No `$ARGUMENTS`, no absolute paths, no `CLAUDE_PLUGIN_ROOT`, no plan-mode steps, no spawning subagents or calling sibling skills. Avoid time-sensitive phrasing such as "currently" or "as of 2024". Fully qualify any MCP tool as `ServerName:tool_name`.
+Body rules: no H1, imperative voice, under 500 lines. No `$ARGUMENTS`, no absolute paths, no plan-mode steps, no spawning subagents or calling sibling skills. Avoid time-sensitive phrasing such as "currently" or "as of 2024". Fully qualify any MCP tool as `ServerName:tool_name`.
+
+`CLAUDE_PLUGIN_ROOT` must not appear anywhere under `skills/<name>/`. The validator greps every file in the directory for that literal, so a skill that merely documents the variable fails — never copy this rule's wording into the skill itself.
 
 Move anything over ~500 lines into `skills/<name>/references/<topic>.md` — exactly one level deep, with a table of contents if the reference exceeds 100 lines.
 
