@@ -3,6 +3,10 @@
 Distilled from Wikipedia's "Signs of AI writing" field guide
 (https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
 
+Source material is licensed CC BY-SA 4.0
+(https://creativecommons.org/licenses/by-sa/4.0/); this adaptation is shared
+under the same terms.
+
 **The density principle.** No single word proves AI authorship — humans write
 "delve" too. The signal is clustering: several tells from several categories in
 the same passage. Judge density before rewriting: a lone flagged word in
@@ -43,9 +47,9 @@ nothing once the stock word is gone, cut the sentence.
 
 | Tell | Examples | Rewrite strategy |
 |---|---|---|
-| Promotional puffery | "vibrant", "nestled", "rich cultural heritage", "groundbreaking", "renowned", "diverse array", "plays a vital role", "continues to captivate" | State the fact neutrally. "A vibrant community of developers" → "About 200 developers contribute". |
+| Promotional puffery | "vibrant", "nestled", "rich cultural heritage", "groundbreaking", "renowned", "diverse array", "plays a vital role", "continues to captivate" | Drop the evaluative adjective, keep the noun the source gave you. "A vibrant community of developers" → "A community of developers". Substitute a concrete figure **only if the source supplies one** — never supply the number yourself. |
 | Undue significance | "pivotal moment", "indelible mark", "enduring legacy", "key turning point", "reflects broader trends" | Say what happened; let the reader judge importance. Delete significance claims with no evidence behind them. |
-| Vague attribution (weasel words) | "observers note", "experts argue", "many believe", "industry reports suggest", "widely regarded as" | Name the actual source, or drop the claim. One source is "X says", not "experts say". |
+| Vague attribution (weasel words) | "observers note", "experts argue", "many believe", "industry reports suggest", "widely regarded as" | Name the source when the text or context supplies it — one source is "X says", not "experts say". When no source is available, keep the claim and flag the attribution as unresolved in the findings; never delete a substantive claim to remove a weasel word, and never invent an authority. |
 | Empty summary sentences | a closing sentence that restates the paragraph it ends | Cut it. |
 | Chat and assistant artifacts | "Let's explore", "It's worth noting that", "It is important to note", "As an AI", knowledge-cutoff disclaimers | Delete. These address a chat user, not a reader. |
 | Hedging stacks | "may potentially", "could possibly", "it seems that perhaps" | Keep one hedge at most; prefer the plain claim when the fact supports it. |
@@ -82,10 +86,15 @@ substantive claims.
 
 For the HUMANIZE REPORT block:
 
-- **LOW** — tells in 0–1 categories, no clustering. Text is mostly natural;
-  fix only the clear hits.
-- **MEDIUM** — tells in 2–3 categories, or repeated hits in one. Substitute
-  throughout; restructure the worst sentences.
-- **HIGH** — tells in 3+ categories or dense clustering in any paragraph.
-  Substitute and restructure: vary sentence rhythm, break parallel triads,
-  rebuild formulaic paragraphs.
+Score on the number of categories that fire. The bands are disjoint — exactly
+one applies to any input:
+
+- **LOW** — tells in 0 or 1 category. Text is mostly natural; fix only the
+  clear hits.
+- **MEDIUM** — tells in exactly 2 categories, or repeated hits within a
+  single category. Substitute throughout; restructure the worst sentences.
+- **HIGH** — tells in 3 or more categories. Substitute and restructure: vary
+  sentence rhythm, break parallel triads, rebuild formulaic paragraphs.
+
+Dense clustering inside one paragraph raises the score by one band (LOW → MEDIUM,
+MEDIUM → HIGH); HIGH is already the ceiling.

@@ -86,10 +86,16 @@ Findings:
 ---
 ```
 
-- In `rewrite` mode, follow the block with the full rewritten text (or, for
-  file input, a note that the file was edited in place plus a summary of what
-  changed).
-- In `review-only` mode, stop after the block — propose fixes in the findings
-  lines but change nothing.
-- No findings → `Findings: none`, density LOW, and the text returned
-  unchanged with a note that it already reads naturally.
+What follows the block depends on the mode alone — the two rules never
+overlap, so a caller can parse the output from `Mode:` without inspecting the
+findings:
+
+- `Mode: rewrite` → follow the block with the full text. With findings, that
+  is the rewritten text (or, for file input, a note that the file was edited
+  in place plus a summary of what changed). With no findings, it is the
+  original text unchanged, plus a note that it already reads naturally.
+- `Mode: review-only` → stop after the block. Propose fixes in the findings
+  lines and change nothing, whether or not there were findings.
+
+No findings in either mode → `Findings: none` and `Density: LOW — 0 findings
+across 0 categories`.
