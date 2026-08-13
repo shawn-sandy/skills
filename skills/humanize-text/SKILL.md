@@ -75,7 +75,7 @@ report.
 
 Output exactly this block (fill in the brackets), then the rewrite:
 
-```
+```text
 HUMANIZE REPORT
 ---
 Mode: [rewrite | review-only]
