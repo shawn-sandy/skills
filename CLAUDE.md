@@ -48,6 +48,18 @@ metadata:
 
 When authoring or reviewing a skill, read `skills/reviewing-skills/references/best-practices.md` first — it holds the full rules and is not loaded automatically.
 
+## Claude plugin marketplace
+
+The repo is also a Claude Code plugin marketplace: `.claude-plugin/marketplace.json`
+lists one plugin whose `source` is `"./"`, so the repo root *is* the plugin body and
+`.claude-plugin/plugin.json` describes it. Skills are auto-discovered from `skills/` —
+never list them individually in either manifest, or the two files drift as skills are
+added. Keep `version` in step across both files and bump on release.
+
+Validate with `claude plugin validate .` after editing either manifest. It warns that
+root `CLAUDE.md` is not loaded as plugin context; that is expected — this file is repo
+guidance, not shipped context.
+
 ## Generated files
 
 The README skill table between `<!-- INDEX:START -->` and `<!-- INDEX:END -->` is generated. Run `python3 scripts/update-index.py` after changing any skill's `name` or `description`, and never hand-edit the table. The generator writes each description straight into a Markdown table cell, so a `|` anywhere in a `description` adds a column and corrupts that row — keep pipe characters out of descriptions.
