@@ -7,6 +7,15 @@ Source material is licensed CC BY-SA 4.0
 (https://creativecommons.org/licenses/by-sa/4.0/); this adaptation is shared
 under the same terms.
 
+## Table of Contents
+
+- [Category 1 — Stock vocabulary](#category-1--stock-vocabulary)
+- [Category 2 — Phrasing and structure](#category-2--phrasing-and-structure)
+- [Category 3 — Tone and content](#category-3--tone-and-content)
+- [Category 4 — Formatting and punctuation](#category-4--formatting-and-punctuation)
+- [Voice targets](#voice-targets)
+- [Density scoring](#density-scoring)
+
 **The density principle.** No single word proves AI authorship — humans write
 "delve" too. The signal is clustering: several tells from several categories in
 the same passage. Judge density before rewriting: a lone flagged word in

@@ -73,7 +73,7 @@ report.
 
 ## Step 5 — Emit the HUMANIZE REPORT
 
-Output exactly this block (fill in the brackets), then the rewrite:
+Output exactly this block (fill in the brackets):
 
 ```text
 HUMANIZE REPORT
