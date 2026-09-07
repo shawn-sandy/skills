@@ -20,8 +20,9 @@ For deterministic runs, write a fixture `.jsonl` in the scratchpad: one JSON obj
 `tool_use` with `name` and `input`, `tool_result`).
 
 Gotchas seen: zsh expands a bare `=word` argument as a command lookup, so quote it (`'=word'`).
-Default log discovery keyed on the cwd finds only the current worktree's sessions when run from
-inside a worktree; run from the main checkout to see the whole project.
+Default log discovery resolves the main checkout through git, so a run from inside a worktree
+scans both the worktree's and the main checkout's log directories. Confirm the session count in
+the header line matches a run from the main checkout.
 
 ## SKILL.md surface
 

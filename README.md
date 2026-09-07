@@ -37,7 +37,7 @@ Code:
 /plugin install skills@shawn-sandy
 ```
 
-That installs all twelve skills as one plugin, namespaced under `skills:` (for
+That installs every skill in the table below as one plugin, namespaced under `skills:` (for
 example `/skills:tdd-fix`). Both paths serve the same `skills/<name>/SKILL.md`
 files — pick whichever fits your agent.
 

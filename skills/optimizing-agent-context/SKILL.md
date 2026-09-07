@@ -32,10 +32,11 @@ loaded and what CLAUDE.md still needs to say.
 
 ## Step 1 — Count what actually ran
 
-Run the bundled counter from the project root. The path is relative to this skill's directory.
+Run the bundled counter from the project root. `<skill-dir>` is the directory that contains this
+SKILL.md; keep the working directory on the project so log discovery keys on the project path.
 
 ```bash
-python3 scripts/count_usage.py --since YYYY-MM-DD
+python3 <skill-dir>/scripts/count_usage.py --since YYYY-MM-DD
 ```
 
 With no path argument it finds the log directories for the project's main checkout and its
@@ -61,7 +62,7 @@ Then check every CLAUDE.md rule of the form "always use NAME when touching PATH"
 per rule:
 
 ```bash
-python3 scripts/count_usage.py --follows src/components/=component-skill --follows src/api/=api-review
+python3 <skill-dir>/scripts/count_usage.py --follows src/components/=component-skill --follows src/api/=api-review
 ```
 
 Each check prints how many sessions edited a file under PATH and how many of those used NAME
@@ -159,9 +160,11 @@ Do not proceed on silence.
 ## Step 6 — Apply
 
 ```bash
-git rm -r .claude/commands            # or list the individual files
-git rm .claude/agents/<unused>.md
+git rm .claude/commands/<unused-command>.md
+git rm .claude/agents/<unused-agent>.md
 ```
+
+Remove a whole directory only when every file in it was confirmed unused in Step 5.
 
 Edit the `enabledPlugins` block per the Step 3 rules. Touch the user-level settings file only
 when a name collision requires it, and say in the report that the edit lives outside the repo.

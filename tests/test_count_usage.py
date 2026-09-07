@@ -25,17 +25,23 @@ def event(kind, content, stamp="2026-09-01T10:00:00Z"):
 class ScanTolerance(unittest.TestCase):
     def test_well_formed_json_that_is_not_an_event_is_skipped(self):
         good = event("user", [{"type": "text", "text": "<command-name>/demo:cmd</command-name>"}])
-        junk = [
-            "null", "42", "[1, 2]", "{broken json",
-            json.dumps({"type": "user", "timestamp": "2026-09-01", "message": "not-a-dict"}),
-            json.dumps({"type": "assistant", "timestamp": "2026-09-01", "message": {"content": 42}}),
+        # Event-shaped records with a malformed message: counted as a session, content ignored.
+        odd_messages = [
+            json.dumps({"type": "user", "timestamp": "2026-09-01T10:00:00Z", "message": "not-a-dict"}),
+            json.dumps({"type": "assistant", "timestamp": "2026-09-01T10:00:00Z", "message": {"content": 42}}),
         ]
+        # Lines that are not event records at all: must leave no trace, not even a session.
+        junk = ["null", "42", "[1, 2]", "{broken json", json.dumps("2026-01-01T00:00:00Z")]
         with tempfile.TemporaryDirectory() as d:
             with open(os.path.join(d, "s.jsonl"), "w") as fh:
-                fh.write("\n".join(junk + [good]) + "\n")
+                fh.write("\n".join(odd_messages + [good]) + "\n")
+            with open(os.path.join(d, "junk.jsonl"), "w") as fh:
+                fh.write("\n".join(junk) + "\n")
             tally, per_session, sessions, first, last = cu.scan(list(cu.jsonl_files([d])), "")
         self.assertEqual(tally["commands"]["demo:cmd"][0], 1)
+        self.assertEqual(per_session["s"]["touched"], {"demo:cmd"})
         self.assertEqual(sessions, {"s"})
+        self.assertEqual((first, last), ("2026-09-01", "2026-09-01"))
 
 
 class ShellWriteRegex(unittest.TestCase):
