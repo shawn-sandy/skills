@@ -34,8 +34,9 @@ CATEGORIES = ("commands", "skills", "mcp", "subagents")
 EDIT_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
 # ponytail: a shell command "touches" a path when it also carries a write operator;
 # refine per-command if false positives from `ls foo > out` ever matter.
-# A ">" preceded by a digit or "&" is stderr plumbing (2>&1), and ">/dev/null" writes nothing.
-SHELL_WRITE_RE = re.compile(r"((?<![0-9&])>(?!&|\s*/dev/null)|\btee\b|\bsed -i|\bmv\b|\bcp\b|\brm\b)")
+# A ">" followed by "&" is descriptor plumbing (2>&1) and ">/dev/null" writes nothing;
+# "2> err.log", "1> out.txt", and "&> both.log" do write files and must count.
+SHELL_WRITE_RE = re.compile(r"(>(?!&|\s*/dev/null)|\btee\b|\bsed -i|\bmv\b|\bcp\b|\brm\b)")
 
 
 def project_roots():
@@ -74,10 +75,13 @@ def jsonl_files(paths):
 
 
 def blocks(event):
-    content = (event.get("message") or {}).get("content")
+    message = event.get("message")
+    content = message.get("content") if isinstance(message, dict) else None
     if isinstance(content, str):
         return [{"type": "text", "text": content}]
-    return [b for b in content or [] if isinstance(b, dict)]
+    if isinstance(content, list):
+        return [b for b in content if isinstance(b, dict)]
+    return []
 
 
 def scan(files, since):
@@ -98,6 +102,8 @@ def scan(files, since):
                     event = json.loads(line)
                 except ValueError:
                     continue  # partial or corrupt line; skip it, keep counting
+                if not isinstance(event, dict):
+                    continue  # valid JSON but not an event record
                 stamp = str(event.get("timestamp") or "")[:10]
                 if stamp and stamp < since:
                     continue
