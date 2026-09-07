@@ -8,8 +8,10 @@ Usage:
   count_usage.py [--since YYYY-MM-DD] [--follows PATH=NAME ...] [PATH ...]
 
 PATH is a .jsonl file or a directory searched recursively for them. With no
-PATH, scans ~/.claude/projects/<encoded cwd>*/ — the log directories Claude
-Code keeps for the current project and its worktrees.
+PATH, scans ~/.claude/projects/<encoded checkout>*/ — the log directories
+Claude Code keeps for the project's main checkout and its worktrees. Run from
+inside a worktree, it still resolves the main checkout through git, so the
+whole project's history counts.
 
 --follows PATH=NAME checks one CLAUDE.md rule of the form "use NAME when
 touching PATH": it reports how many sessions edited a file whose path contains
@@ -19,10 +21,12 @@ mentions NAME). Edits made through shell redirection count as edits. Stdlib only
 """
 import argparse
 import collections
+import datetime
 import glob
 import json
 import os
 import re
+import subprocess
 import sys
 
 CMD_RE = re.compile(r"<command-name>/?([^<]+)</command-name>")
@@ -34,11 +38,26 @@ EDIT_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
 SHELL_WRITE_RE = re.compile(r"((?<![0-9&])>(?!&|\s*/dev/null)|\btee\b|\bsed -i|\bmv\b|\bcp\b|\brm\b)")
 
 
+def project_roots():
+    """The cwd plus, inside a git worktree, the main checkout it belongs to."""
+    roots = {os.getcwd()}
+    try:
+        common = subprocess.run(["git", "rev-parse", "--git-common-dir"],
+                                capture_output=True, text=True, check=True).stdout.strip()
+        roots.add(os.path.dirname(os.path.abspath(common)))
+    except (OSError, subprocess.CalledProcessError):
+        pass  # not a git repo, or git missing: the cwd alone is the project
+    return roots
+
+
 def default_paths():
     # Claude Code names a project's log dir by replacing every
     # non-alphanumeric character of its absolute path with '-'.
-    encoded = re.sub(r"[^A-Za-z0-9]", "-", os.getcwd())
-    return glob.glob(os.path.expanduser(f"~/.claude/projects/{encoded}*"))
+    found = set()
+    for root in project_roots():
+        encoded = re.sub(r"[^A-Za-z0-9]", "-", root)
+        found.update(glob.glob(os.path.expanduser(f"~/.claude/projects/{encoded}*")))
+    return sorted(found)
 
 
 def jsonl_files(paths):
@@ -127,6 +146,14 @@ def print_table(title, rows):
         print(f"{len(sessions):>8} {calls:>6}  {name}")
 
 
+def iso_day(value):
+    """argparse type for --since: accept a calendar date, return it zero-padded."""
+    try:
+        return datetime.datetime.strptime(value, "%Y-%m-%d").strftime("%Y-%m-%d")
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"expected a date as YYYY-MM-DD, got {value!r}")
+
+
 def print_rule_check(spec, per_session):
     path_sub, _, name = spec.partition("=")
     if not path_sub or not name:
@@ -141,7 +168,7 @@ def print_rule_check(spec, per_session):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="*", help=".jsonl files or directories of them")
-    ap.add_argument("--since", default="", metavar="YYYY-MM-DD", help="ignore events dated before this day")
+    ap.add_argument("--since", type=iso_day, metavar="YYYY-MM-DD", help="ignore events dated before this day")
     ap.add_argument("--follows", action="append", default=[], metavar="PATH=NAME",
                     help="check the rule 'use NAME when touching PATH'; repeatable")
     args = ap.parse_args()
@@ -150,7 +177,7 @@ def main():
     if not files:
         sys.exit("error: no .jsonl session logs found; pass a log directory as PATH")
 
-    tally, per_session, sessions, first, last = scan(files, args.since)
+    tally, per_session, sessions, first, last = scan(files, args.since or "")
     print(f"# Skill usage across {len(sessions)} sessions, {len(files)} log files ({first or '?'} to {last or '?'})")
     print_table("Slash commands typed by the user", tally["commands"])
     print_table("Skills invoked by the agent", tally["skills"])

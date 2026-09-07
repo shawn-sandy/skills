@@ -38,10 +38,11 @@ Run the bundled counter from the project root. The path is relative to this skil
 python3 scripts/count_usage.py --since YYYY-MM-DD
 ```
 
-With no path argument it finds the project's log directories under `~/.claude/projects/`
-(the project path with every non-alphanumeric character replaced by `-`, plus its worktrees).
-Pass a log directory explicitly when the project lives elsewhere. Drop `--since` to count
-everything on disk.
+With no path argument it finds the log directories for the project's main checkout and its
+worktrees under `~/.claude/projects/` (the checkout path with every non-alphanumeric character
+replaced by `-`). From inside a worktree it resolves the main checkout through git, so the
+whole project's history counts. Pass a log directory explicitly when the logs live elsewhere.
+Drop `--since` to count everything on disk.
 
 The output has four tables and a rollup:
 
@@ -192,15 +193,17 @@ Remove doc lines that advertise deleted commands. Add a changelog entry if the p
 ```bash
 ls .claude/commands 2>/dev/null; ls .claude/agents
 python3 -c 'import json; s = json.load(open(".claude/settings.json")); print(sorted(k for k, v in s.get("enabledPlugins", {}).items() if v))'
-grep -A12 '^## Workflow Skills' CLAUDE.md
+awk '/^## Workflow Skills/{p=1; print; next} p && /^## /{exit} p' CLAUDE.md
 wc -lc CLAUDE.md .claude/rules/*.md
-grep -rn '<removed-name>' CLAUDE.md .claude/rules README.md docs/ || echo "no dead references"
+grep -rnE '/<removed-name>\b|<removed-name>\.md' CLAUDE.md .claude/rules README.md docs/ --exclude='<this-plan>*' || echo "no dead references"
 ```
 
-Expected: only the kept files list, only the kept plugin keys print, the table shows a header
-plus one row per stage, CLAUDE.md is smaller than the Step 2 measurement, and no removed name
-appears anywhere. Run the project's markdown lint and formatter check on the touched files
-when it has them.
+Expected: only the kept files list, only the kept plugin keys print, the whole Workflow Skills
+section prints with one row per stage, CLAUDE.md is smaller than the Step 2 measurement, and
+no removed name appears as a slash command or a file outside the plan that documents the
+removal. The grep matches `/name` and `name.md` only, so a longer hyphenated word that happens
+to contain the name does not count. Run the project's markdown lint and formatter check on the
+touched files when it has them.
 
 Then open a fresh session in the repository and type `/`. None of the removed names should
 autocomplete; every skill named in the table should. Ask that session to commit a scratch
