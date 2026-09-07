@@ -11,6 +11,9 @@ for m in .claude-plugin/marketplace.json .claude-plugin/plugin.json; do
   python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$m"
 done
 
+# Regression tests for skill scripts (stdlib unittest; -B keeps __pycache__ out of the tree).
+python3 -B -m unittest discover -s tests -p "test_*.py"
+
 if command -v skills-ref >/dev/null 2>&1; then
   fail=0
   for d in skills/*/; do
